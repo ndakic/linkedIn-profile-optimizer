@@ -1,0 +1,10 @@
+langgraph==0.2.40
+langchain==0.3.7
+langchain-openai==0.2.8
+PyMuPDF==1.24.14
+fastapi==0.115.4
+uvicorn==0.32.0
+python-multipart==0.0.12
+pydantic==2.9.2
+PyYAML==6.0.2
+python-dotenv==1.0.1
