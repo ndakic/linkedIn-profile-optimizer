@@ -127,6 +127,18 @@ export interface Summary {
   recommended_actions: string[];
 }
 
+export interface TokenUsage {
+  model: string;
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+}
+
+export interface StorageInfo {
+  created_at: string;
+  optimization_id: string;
+}
+
 export interface OptimizationResults {
   success: boolean;
   status: string;
@@ -138,6 +150,8 @@ export interface OptimizationResults {
   recommendations_count?: number;
   content_ideas_count?: number;
   sample_posts_count?: number;
+  token_usage?: TokenUsage;
+  storage_info?: StorageInfo;
 }
 
 export interface UploadState {

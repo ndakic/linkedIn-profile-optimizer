@@ -7,6 +7,8 @@ interface FileUploadProps {
   onFileSelect: (file: File) => void;
   targetRole: string;
   onTargetRoleChange: (role: string) => void;
+  apiKey: string;
+  onApiKeyChange: (apiKey: string) => void;
   onOptimize: () => void;
   uploadState: UploadState;
   disabled?: boolean;
@@ -16,6 +18,8 @@ export default function FileUpload({
   onFileSelect,
   targetRole,
   onTargetRoleChange,
+  apiKey,
+  onApiKeyChange,
   onOptimize,
   uploadState,
   disabled = false,
@@ -23,6 +27,7 @@ export default function FileUpload({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const [fileError, setFileError] = useState<string>('');
+  const [showApiKey, setShowApiKey] = useState(false);
 
   const validateFile = (file: File): string | null => {
     // Check file type
@@ -81,7 +86,11 @@ export default function FileUpload({
     onTargetRoleChange(value);
   }, [onTargetRoleChange]);
 
-  const isOptimizeDisabled = !selectedFile || uploadState.isUploading || disabled;
+  const handleApiKeyChange = useCallback((value: string) => {
+    onApiKeyChange(value);
+  }, [onApiKeyChange]);
+
+  const isOptimizeDisabled = !selectedFile || !apiKey.trim() || uploadState.isUploading || disabled;
 
   return (
     <div className="w-full max-w-2xl mx-auto">
@@ -141,6 +150,40 @@ export default function FileUpload({
             Maximum file size: 10MB • PDF format only
           </p>
         </div>
+      </div>
+
+      {/* OpenAI API Key Input */}
+      <div className="mt-6 space-y-2 relative z-10">
+        <label htmlFor="apiKey" className="block text-sm font-medium text-gray-700">
+          OpenAI API Key <span className="text-red-500">*</span>
+        </label>
+        <div className="relative">
+          <input
+            id="apiKey"
+            type={showApiKey ? "text" : "password"}
+            value={apiKey}
+            onChange={(e) => handleApiKeyChange(e.target.value)}
+            placeholder="sk-proj-..."
+            className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-linkedin focus:border-transparent relative z-10 text-gray-900 bg-white font-mono text-sm"
+            disabled={disabled}
+            autoComplete="off"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowApiKey(!showApiKey)}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            tabIndex={-1}
+          >
+            {showApiKey ? '👁️' : '👁️‍🗨️'}
+          </button>
+        </div>
+        <p className="text-xs text-gray-500">
+          Your API key is only used for this request and never stored. Get yours at{' '}
+          <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-linkedin hover:underline">
+            platform.openai.com/api-keys
+          </a>
+        </p>
       </div>
 
       {/* Target Role Input */}

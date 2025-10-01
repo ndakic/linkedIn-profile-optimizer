@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 import time
 from typing import Dict, Any, List, Optional
 from langchain_openai import ChatOpenAI
@@ -11,15 +12,38 @@ from config import config
 logger = logging.getLogger(__name__)
 
 
+def extract_json_from_markdown(content: str) -> str:
+    """
+    Extract JSON from markdown code blocks.
+
+    Handles cases where LLM returns JSON wrapped in ```json ... ``` blocks.
+
+    Args:
+        content: Raw LLM response that may contain markdown
+
+    Returns:
+        Clean JSON string
+    """
+    # Try to extract JSON from markdown code blocks
+    json_pattern = r'```(?:json)?\s*([\s\S]*?)\s*```'
+    match = re.search(json_pattern, content)
+
+    if match:
+        return match.group(1).strip()
+
+    # If no code block found, return original content (might be raw JSON)
+    return content.strip()
+
+
 class ContentGeneratorAgent:
     """Agent responsible for generating LinkedIn content ideas and posts based on profile analysis."""
 
-    def __init__(self, model_name: Optional[str] = None, temperature: Optional[float] = None):
+    def __init__(self, model_name: Optional[str] = None, api_key: Optional[str] = None):
         self.llm = ChatOpenAI(
             model=model_name or config.OPENAI_MODEL,
-            temperature=temperature or (config.DEFAULT_TEMPERATURE + 0.4),  # Higher for creativity
-            max_tokens=config.MAX_TOKENS,
-            openai_api_key=config.OPENAI_API_KEY
+            temperature=1.0,
+            # max_completion_tokens=config.MAX_TOKENS,
+            openai_api_key=api_key or config.OPENAI_API_KEY
         )
         self.prompt_loader = PromptLoader()
 
@@ -38,15 +62,15 @@ class ContentGeneratorAgent:
         req_id = request_id or "unknown"
         start_time = time.time()
 
-        logger.info(f"✨ [REQ:{req_id}] Content Generator - Starting content generation...")
+        logger.info(f"[INFO] [REQ:{req_id}] Content Generator - Starting content generation...")
 
         try:
             # Validate input data
             if not profile_data:
-                logger.error(f"❌ [REQ:{req_id}] Empty profile data provided")
+                logger.error(f"[ERROR] [REQ:{req_id}] Empty profile data provided")
                 raise ValueError("Profile data cannot be empty")
             if not profile_analysis:
-                logger.error(f"❌ [REQ:{req_id}] Empty profile analysis provided")
+                logger.error(f"[ERROR] [REQ:{req_id}] Empty profile analysis provided")
                 raise ValueError("Profile analysis cannot be empty")
 
             # Get prompts for the agent
@@ -64,33 +88,47 @@ class ContentGeneratorAgent:
             ]
 
             # Get response from LLM
-            logger.info(f"🤖 [REQ:{req_id}] Sending content generation request to {config.OPENAI_MODEL}...")
+            logger.info(f"[LLM] [REQ:{req_id}] Sending content generation request to {config.OPENAI_MODEL}...")
             llm_start = time.time()
             response = await self.llm.ainvoke(messages)
             llm_time = time.time() - llm_start
 
-            logger.info(f"🤖 [REQ:{req_id}] Content generation response received in {llm_time:.2f}s")
+            # Extract token usage from response
+            token_usage = {
+                'model': config.OPENAI_MODEL,
+                'prompt_tokens': response.response_metadata.get('token_usage', {}).get('prompt_tokens', 0),
+                'completion_tokens': response.response_metadata.get('token_usage', {}).get('completion_tokens', 0),
+                'total_tokens': response.response_metadata.get('token_usage', {}).get('total_tokens', 0)
+            }
+
+            logger.info(f"[LLM] [REQ:{req_id}] Content generation response received in {llm_time:.2f}s")
+            logger.info(f"[LLM] [REQ:{req_id}] Token usage - Prompt: {token_usage['prompt_tokens']}, Completion: {token_usage['completion_tokens']}, Total: {token_usage['total_tokens']}")
 
             # Parse JSON response
             try:
-                content_results = json.loads(response.content)
+                # Extract JSON from markdown if wrapped in code blocks
+                clean_json = extract_json_from_markdown(response.content)
+                content_results = json.loads(clean_json)
                 validated_results = self._validate_content_results(content_results)
 
                 total_time = time.time() - start_time
                 content_count = len(validated_results.get('content_ideas', []))
                 posts_count = len(validated_results.get('sample_posts', []))
 
-                logger.info(f"✅ [REQ:{req_id}] Content generation completed in {total_time:.2f}s")
-                logger.info(f"📊 [REQ:{req_id}] Generated {content_count} content ideas and {posts_count} sample posts")
+                logger.info(f"[OK] [REQ:{req_id}] Content generation completed in {total_time:.2f}s")
+                logger.info(f"[INFO] [REQ:{req_id}] Generated {content_count} content ideas and {posts_count} sample posts")
+
+                # Add token usage to results
+                validated_results['token_usage'] = token_usage
 
                 return validated_results
             except json.JSONDecodeError as e:
-                logger.error(f"❌ [REQ:{req_id}] JSON parsing failed: {str(e)}")
+                logger.error(f"[ERROR] [REQ:{req_id}] JSON parsing failed: {str(e)}")
                 raise ValueError(f"Invalid JSON response from LLM: {str(e)}")
 
         except Exception as e:
             total_time = time.time() - start_time
-            logger.error(f"💥 [REQ:{req_id}] Content generation failed after {total_time:.2f}s: {str(e)}")
+            logger.error(f"[CRITICAL] [REQ:{req_id}] Content generation failed after {total_time:.2f}s: {str(e)}")
             raise Exception(f"Error generating content: {str(e)}")
 
     def _validate_content_results(self, content_results: Dict[str, Any]) -> Dict[str, Any]:
@@ -215,7 +253,9 @@ class ContentGeneratorAgent:
 
             # Parse JSON response
             try:
-                post_data = json.loads(response.content)
+                # Extract JSON from markdown if wrapped in code blocks
+                clean_json = extract_json_from_markdown(response.content)
+                post_data = json.loads(clean_json)
                 return self._validate_single_post(post_data)
             except json.JSONDecodeError as e:
                 raise ValueError(f"Invalid JSON response from LLM: {str(e)}")

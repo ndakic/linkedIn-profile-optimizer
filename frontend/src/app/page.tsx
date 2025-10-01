@@ -2,14 +2,18 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import FileUpload from '@/components/FileUpload';
 import ResultsDisplay from '@/components/ResultsDisplay';
 import { optimizeProfile, APIError } from '@/lib/api';
 import { OptimizationResults, UploadState } from '@/types';
+import { generateOptimizationId } from '@/lib/utils';
 
 export default function HomePage() {
+  const router = useRouter();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [targetRole, setTargetRole] = useState('');
+  const [apiKey, setApiKey] = useState('');
   const [uploadState, setUploadState] = useState<UploadState>({
     isUploading: false,
     progress: 0,
@@ -25,68 +29,44 @@ export default function HomePage() {
   };
 
   const handleOptimize = async () => {
-    if (!selectedFile) return;
+    if (!selectedFile || !apiKey.trim()) {
+      setError('Please provide both a PDF file and your OpenAI API key');
+      return;
+    }
 
+    // Validate API key format
+    if (!apiKey.startsWith('sk-')) {
+      setError('Invalid API key format. OpenAI API keys should start with "sk-"');
+      return;
+    }
+
+    if (apiKey.length < 20) {
+      setError('Invalid API key. The key appears to be too short.');
+      return;
+    }
+
+    // Clear any previous errors
     setError('');
-    setResults(null);
-    setUploadState({
-      isUploading: true,
-      progress: 0,
-      status: 'Uploading file...',
-    });
 
+    // Generate optimization ID immediately
+    const optimizationId = generateOptimizationId();
+
+    // Redirect immediately to results page (don't wait for response)
+    router.push(`/results/${optimizationId}`);
+
+    // Start background processing (fire and forget)
     try {
-      // Simulate upload progress
-      const progressSteps = [
-        { progress: 20, status: 'Processing PDF...' },
-        { progress: 40, status: 'Extracting profile data...' },
-        { progress: 60, status: 'Analyzing profile...' },
-        { progress: 80, status: 'Generating content ideas...' },
-        { progress: 95, status: 'Finalizing results...' },
-      ];
-
-      for (const step of progressSteps) {
-        setUploadState(prev => ({
-          ...prev,
-          progress: step.progress,
-          status: step.status,
-        }));
-        await new Promise(resolve => setTimeout(resolve, 500));
-      }
-
-      const optimizationResults = await optimizeProfile(selectedFile, targetRole);
-
-      setUploadState({
-        isUploading: false,
-        progress: 100,
-        status: 'Optimization complete!',
-      });
-
-      setResults(optimizationResults);
-
+      await optimizeProfile(selectedFile, targetRole, optimizationId, apiKey);
     } catch (error) {
-      console.error('Optimization error:', error);
-
-      let errorMessage = 'An unexpected error occurred';
-
-      if (error instanceof APIError) {
-        errorMessage = error.message;
-      } else if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-
-      setError(errorMessage);
-      setUploadState({
-        isUploading: false,
-        progress: 0,
-        status: 'Upload failed',
-      });
+      console.error('Background optimization error:', error);
+      // Error handling will be done on the results page through polling
     }
   };
 
   const handleReset = () => {
     setSelectedFile(null);
     setTargetRole('');
+    setApiKey('');
     setResults(null);
     setError('');
     setUploadState({
@@ -107,7 +87,7 @@ export default function HomePage() {
                 src="/assets/otterlab-logo.png"
                 alt="Otterlab"
                 width={140}
-                height={70}
+                height={80}
                 className="rounded-lg"
               />
             </div>
@@ -145,11 +125,26 @@ export default function HomePage() {
               </div>
             </div>
 
+            {/* Error Display */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="flex items-center">
+                  <span className="text-2xl mr-3">❌</span>
+                  <div>
+                    <h3 className="text-red-800 font-semibold">Error</h3>
+                    <p className="text-red-600 text-sm mt-1">{error}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Upload Component */}
             <FileUpload
               onFileSelect={handleFileSelect}
               targetRole={targetRole}
               onTargetRoleChange={setTargetRole}
+              apiKey={apiKey}
+              onApiKeyChange={setApiKey}
               onOptimize={handleOptimize}
               uploadState={uploadState}
             />

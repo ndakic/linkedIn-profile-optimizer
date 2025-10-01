@@ -25,8 +25,8 @@ export default function ResultsDisplay({ results }: ResultsDisplayProps) {
   const tabs = [
     { id: 'overview', label: 'Overview', icon: '📊' },
     { id: 'analysis', label: 'Profile Analysis', icon: '🔍' },
-    { id: 'content', label: 'Content Ideas', icon: '✍️' },
     { id: 'recommendations', label: 'Recommendations', icon: '💡' },
+    { id: 'content', label: 'Content Ideas', icon: '✍️' },
   ];
 
   return (
@@ -127,18 +127,33 @@ function OverviewTab({ results }: { results: OptimizationResults }) {
         <h3 className="text-lg font-semibold text-gray-800 mb-4">
           🎯 Content Generated
         </h3>
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <span className="text-gray-600">Ideas:</span>
-            <span className="font-semibold">
-              {content_results?.content_ideas?.length || 0}
-            </span>
+        <div className="space-y-3">
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-gray-600 font-medium">Content Ideas:</span>
+              <span className="bg-linkedin text-white px-2 py-1 rounded-full text-sm">
+                {content_results?.content_ideas?.length || 0}
+              </span>
+            </div>
+            {content_results?.content_ideas && content_results.content_ideas.length > 0 && (
+              <div className="text-sm text-gray-700 bg-gray-50 p-2 rounded">
+                <strong>Latest:</strong> {content_results.content_ideas[0]?.topic || 'N/A'}
+              </div>
+            )}
           </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Sample Posts:</span>
-            <span className="font-semibold">
-              {content_results?.sample_posts?.length || 0}
-            </span>
+
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-gray-600 font-medium">Sample Posts:</span>
+              <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm">
+                {content_results?.sample_posts?.length || 0}
+              </span>
+            </div>
+            {content_results?.sample_posts && content_results.sample_posts.length > 0 && (
+              <div className="text-sm text-gray-700 bg-gray-50 p-2 rounded">
+                <strong>Latest:</strong> {content_results.sample_posts[0]?.title || 'N/A'}
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -32,11 +32,18 @@ class Config:
     ALLOWED_EXTENSIONS: list = [".pdf"]
 
     # LLM Configuration
-    DEFAULT_TEMPERATURE: float = float(os.getenv("DEFAULT_TEMPERATURE", "0.3"))
+    DEFAULT_TEMPERATURE: float = float(os.getenv("DEFAULT_TEMPERATURE", "1"))
     MAX_TOKENS: int = int(os.getenv("MAX_TOKENS", "4000"))
+    MAX_COMPLETION_TOKENS: int = int(os.getenv("MAX_COMPLETION_TOKENS", "4000"))
 
     # CORS Configuration
     ALLOWED_ORIGINS: list = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+
+    # AWS Configuration
+    AWS_ACCESS_KEY_ID: str = os.getenv("AWS_ACCESS_KEY_ID", "")
+    AWS_SECRET_ACCESS_KEY: str = os.getenv("AWS_SECRET_ACCESS_KEY", "")
+    AWS_REGION: str = os.getenv("AWS_REGION", "us-east-1")
+    DYNAMODB_TABLE_NAME: str = os.getenv("DYNAMODB_TABLE_NAME", "linkedin-optimization-results")
 
     @classmethod
     def validate(cls) -> bool:
@@ -75,6 +82,15 @@ class Config:
             print(f"   OpenAI API Key: {masked_key} ✓")
         else:
             print("   OpenAI API Key: Not set ❌")
+
+        # Show AWS configuration status
+        print(f"   AWS Region: {cls.AWS_REGION}")
+        print(f"   DynamoDB Table: {cls.DYNAMODB_TABLE_NAME}")
+        if cls.AWS_ACCESS_KEY_ID and cls.AWS_SECRET_ACCESS_KEY:
+            masked_key_id = cls.AWS_ACCESS_KEY_ID[:4] + "..." + cls.AWS_ACCESS_KEY_ID[-4:] if len(cls.AWS_ACCESS_KEY_ID) > 8 else "***"
+            print(f"   AWS Access Key: {masked_key_id} ✓")
+        else:
+            print("   AWS Credentials: Not set (results won't be saved) ⚠️")
 
 
 # Global configuration instance

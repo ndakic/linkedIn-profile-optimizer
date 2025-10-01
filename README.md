@@ -1,95 +1,10 @@
 # LinkedIn Profile Optimizer
 
-A Multi-Agent System powered by AI that optimizes LinkedIn profiles and generates content ideas based on uploaded profile PDFs.
+AI-powered multi-agent system that analyzes LinkedIn profiles and generates personalized optimization recommendations and content ideas using LangGraph orchestration.
 
-## 🚀 Quick Start
-
-1. **Setup Backend**:
-   ```bash
-   cd backend
-   python -m venv venv
-   source venv/bin/activate
-   pip install -r requirements.txt
-   cp .env.example .env
-   # Edit .env and add your OpenAI API key
-   python main.py
-   ```
-
-2. **Setup Frontend** (in a new terminal):
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
-
-3. **Use the Application**:
-   - Open `http://localhost:3000`
-   - Upload your LinkedIn profile PDF
-   - Get optimization recommendations and content ideas!
-
-## 🚀 Features
-
-- **PDF Profile Analysis**: Extract and analyze LinkedIn profile data from exported PDFs
-- **AI-Powered Optimization**: Get personalized recommendations for profile improvement
-- **Content Generation**: Receive tailored LinkedIn post ideas and content strategy
-- **Multi-Agent Architecture**: Three specialized AI agents working together:
-  - **Profile Collector Agent**: Extracts structured data from PDF files
-  - **Profile Analyzer Agent**: Analyzes profiles and identifies optimization opportunities
-  - **Content Generator Agent**: Creates engaging LinkedIn content ideas and posts
-
-## 🏗 Architecture
-
-### Tech Stack
-
-- **Backend**: Python with FastAPI
-- **Frontend**: Next.js with TypeScript and Tailwind CSS
-- **AI Framework**: LangGraph for multi-agent orchestration
-- **LLM**: OpenAI GPT-4 (configurable)
-- **PDF Processing**: PyMuPDF for text extraction
-- **State Management**: LangGraph with MemorySaver
-
-### Project Structure
-
-```
-linkedin-profile-optimizer/
-├── backend/
-│   ├── agents/
-│   │   ├── profile_collector.py    # PDF parsing and data extraction
-│   │   ├── profile_analyzer.py     # Profile analysis and recommendations
-│   │   └── content_generator.py    # Content ideas and post generation
-│   ├── workflows/
-│   │   └── linkedin_optimizer_workflow.py  # LangGraph orchestration
-│   ├── utils/
-│   │   ├── pdf_parser.py          # PDF processing utilities
-│   │   └── prompt_loader.py       # YAML prompt management
-│   ├── config.py                  # Configuration management
-│   ├── prompts.yaml               # All agent prompts
-│   ├── main.py                    # FastAPI application
-│   ├── requirements.txt           # Python dependencies
-│   └── .env.example               # Environment variables template
-├── frontend/
-│   ├── src/
-│   │   ├── app/                   # Next.js app directory
-│   │   ├── components/            # React components
-│   │   ├── lib/                   # Utility functions
-│   │   └── types/                 # TypeScript types
-│   ├── package.json               # Node.js dependencies
-│   └── next.config.js             # Next.js configuration
-└── README.md
-```
-
-## 🛠 Detailed Setup
-
-### Prerequisites
-
-- Python 3.10
-- Node.js 18+
-- OpenAI API key
+## Quick Start
 
 ### Backend Setup
-
-The backend runs on FastAPI and provides the AI-powered optimization API.
-
 ```bash
 cd backend
 python -m venv venv
@@ -100,261 +15,193 @@ cp .env.example .env
 python main.py
 ```
 
-The API will be available at `http://localhost:8000`
-
 ### Frontend Setup
-
-The frontend is a Next.js application that provides the user interface.
-
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-The frontend will be available at `http://localhost:3000`
+### Usage
 
-## 📝 Usage
+**Option 1: Self-Service (Recommended)**
+1. Open `http://localhost:3000`
+2. Enter your OpenAI API key (get one at [platform.openai.com/api-keys](https://platform.openai.com/api-keys))
+3. Upload your LinkedIn profile PDF (export from LinkedIn)
+4. Optionally specify a target role/industry
+5. Click "Optimize My LinkedIn Profile"
+6. Review personalized recommendations and content ideas
 
-### How to Export Your LinkedIn Profile as PDF
+**Option 2: Server-Side API Key**
+- Configure `OPENAI_API_KEY` in backend `.env` file
+- Remove API key requirement from frontend (modify validation)
+- Users can access without providing their own key
 
-1. Go to your LinkedIn profile page
-2. Click the "More" button (three dots)
-3. Select "Save to PDF"
-4. Download the PDF file
+## Key Features
 
-### Using the Application
+- **Profile Analysis**: AI-powered analysis of your LinkedIn profile with comprehensive scoring (0-100)
+- **Personalized Recommendations**: Specific suggestions for headline, summary, skills, certifications, and experience optimization
+- **Content Generation**: AI-generated content ideas, sample posts, and weekly content calendar
+- **Real-time Progress Tracking**: Live progress monitoring with 5-minute timeout (60 polls at 5-second intervals)
+- **Results Storage**: AWS DynamoDB integration with 30-day TTL for persistent storage
+- **Token Usage Transparency**: Detailed tracking of model name, prompt tokens, completion tokens, and total consumption
+- **Shareable Results**: Unique URLs for each optimization with copy-to-clipboard functionality
+- **Responsive UI**: Modern, professional interface with tabbed navigation and visual progress indicators
+- **Flexible API Key Options**: Use your own OpenAI API key or server default (configurable)
 
-1. Open `http://localhost:3000` in your browser
-2. Upload your LinkedIn profile PDF
-3. (Optional) Specify a target role/industry for personalized recommendations
-4. Click "Optimize My LinkedIn Profile"
-5. Review the results in the comprehensive dashboard
+## Architecture
 
-## 🤖 Agent Details
+### Tech Stack
+- **Backend**: Python 3.10+ with FastAPI and uvicorn
+- **Frontend**: Next.js 15 with TypeScript and Tailwind CSS
+- **AI Framework**: LangGraph for stateful multi-agent orchestration with memory checkpointing
+- **LLM**: OpenAI GPT models (configurable, default: gpt-4o-mini)
+- **PDF Processing**: PyMuPDF for text extraction
+- **Storage**: AWS DynamoDB for results persistence with automatic TTL management
 
-### Profile Collector Agent (`profile_collector.py`)
+### Multi-Agent System
+The application uses a LangGraph workflow with three specialized AI agents coordinated through a state machine:
 
-**Purpose**: Extracts structured information from LinkedIn profile PDFs
+1. **Profile Collector Agent**:
+   - Extracts structured data from LinkedIn PDF files
+   - Validates and cleans profile information
+   - Returns JSON-structured profile data with token usage tracking
 
-**Capabilities**:
-- PDF text extraction using PyMuPDF
-- Structured data parsing with LLM
-- Validation and data cleaning
+2. **Profile Analyzer Agent**:
+   - Calculates overall profile score (0-100)
+   - Identifies strengths and areas for improvement
+   - Generates specific recommendations for headline, summary, skills, and experience
+   - Provides industry-specific insights and next steps
 
-**Output**: Structured JSON with profile sections:
-- Personal information
-- Professional summary
-- Work experience
-- Education
-- Skills and endorsements
-- Recommendations
-- Languages and volunteer work
+3. **Content Generator Agent**:
+   - Creates personalized content strategy with posting frequency and best times
+   - Generates 5+ content ideas with topics, objectives, and target audiences
+   - Produces sample LinkedIn posts with engagement hooks and hashtags
+   - Designs weekly content calendar with varied content types
 
-### Profile Analyzer Agent (`profile_analyzer.py`)
+**Workflow Steps**:
+1. Profile Collection → 2. Profile Analysis → 3. Content Generation → 4. Results Compilation
 
-**Purpose**: Analyzes profile data and provides optimization recommendations
+## Configuration
 
-**Capabilities**:
-- Profile completeness assessment
-- Industry-specific keyword analysis
-- ATS optimization suggestions
-- Professional branding recommendations
+### API Key Configuration
 
-**Output**:
-- Overall profile score (0-100)
-- Strengths and improvement areas
-- Specific recommendations for headline, summary, and experience
-- Skills and certification suggestions
-- Next steps for optimization
+**Option 1: User-Provided API Key (Default)**
+- Users enter their OpenAI API key in the frontend
+- No server-side API key required
+- API key is sent with each request and never stored
+- Best for public deployments or testing
 
-### Content Generator Agent (`content_generator.py`)
+**Option 2: Server-Side API Key**
+- Set `OPENAI_API_KEY` in backend `.env` file
+- Users don't need to provide their own key
+- Best for internal/private deployments
 
-**Purpose**: Creates engaging LinkedIn content based on profile analysis
+### Required Environment Variables
+```bash
+# Backend (.env)
+OPENAI_API_KEY=your_openai_api_key_here  # Optional if users provide their own
 
-**Capabilities**:
-- Content strategy development
-- Post ideas generation
-- Sample post creation
-- Weekly content calendar
-
-**Output**:
-- Content strategy with posting frequency and optimal times
-- Multiple content ideas with different formats (posts, articles, polls)
-- Sample posts ready to publish
-- Weekly content calendar
-
-## 📊 API Endpoints
-
-### Main Endpoints
-
-- `POST /optimize-profile` - Complete profile optimization workflow
-- `POST /analyze-profile` - Profile analysis only
-- `POST /generate-content` - Content generation only
-- `GET /health` - Health check
-
-## ⚙️ Configuration
-
-### Prompts Configuration
-
-All agent prompts are stored in `backend/prompts.yaml` for easy modification:
-
-```yaml
-profile_collector:
-  system_prompt: |
-    You are a LinkedIn Profile Collector Agent...
-  user_prompt: |
-    Please extract all relevant LinkedIn profile information...
-
-profile_analyzer:
-  system_prompt: |
-    You are a LinkedIn Profile Analyzer Agent...
-  user_prompt: |
-    Please analyze the following LinkedIn profile data...
-
-content_generator:
-  system_prompt: |
-    You are a LinkedIn Content Generator Agent...
-  user_prompt: |
-    Based on the following profile analysis...
+# Optional - AWS DynamoDB (for results storage)
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+AWS_REGION=us-east-1
+DYNAMODB_TABLE_NAME=linkedin-optimizer-results
 ```
 
-### Environment Variables
+### Optional Configuration
+```bash
+# Model and Performance
+OPENAI_MODEL=gpt-4o-mini  # Model to use (gpt-4o, gpt-4o-mini, gpt-5-mini-2025-08-07, etc.)
+MAX_TOKENS=4000  # Max tokens per request
+MAX_COMPLETION_TOKENS=4000  # Max completion tokens
+MAX_FILE_SIZE=10485760  # 10MB file size limit
 
-Backend (`.env`):
-```
-# Required
-OPENAI_API_KEY=your_openai_api_key_here
-
-# Optional (with defaults)
-OPENAI_MODEL=gpt-4o
+# Server
 HOST=0.0.0.0
 PORT=8000
 DEBUG=false
-MAX_FILE_SIZE=10485760
-DEFAULT_TEMPERATURE=0.3
-MAX_TOKENS=4000
 ALLOWED_ORIGINS=http://localhost:3000
+
+# Note: Temperature is fixed at 1.0 (only supported value for certain OpenAI models)
 ```
 
-Frontend:
+## API Endpoints
+
+### Primary Endpoint
+
+**`POST /optimize-profile`** - Complete profile optimization workflow
+- **Parameters**:
+  - `file`: PDF file (required)
+  - `target_role`: Target role/industry (optional)
+  - `optimization_id`: Pre-generated UUID (optional)
+  - `api_key`: OpenAI API key (optional, uses server default if not provided)
+- **Format**: multipart/form-data
+- **Returns**: Complete optimization results with profile analysis and content generation
+
+### Results & Progress Endpoints
+
+- **`GET /results/{optimization_id}`** - Retrieve saved optimization results from DynamoDB
+- **`GET /progress/{optimization_id}`** - Get real-time optimization progress with step details
+- **`GET /results`** - List recent optimization results
+
+### Utility Endpoints
+
+- **`GET /health`** - Health check endpoint
+- **`GET /`** - API information and available endpoints
+
+### Response Format
+All endpoints return JSON with:
+- `success`: Boolean indicating success/failure
+- `status`: Human-readable status message
+- `profile_data`: Extracted profile information
+- `analysis_results`: Profile analysis with scores and recommendations
+- `content_results`: Generated content ideas and posts
+- `token_usage`: Model name and token consumption details
+- `storage_info`: DynamoDB storage metadata
+
+## Project Structure
+
 ```
-NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
-```
+backend/
+├── agents/                      # AI agents
+│   ├── profile_collector.py    # PDF extraction agent
+│   ├── profile_analyzer.py     # Profile analysis agent
+│   └── content_generator.py    # Content generation agent
+├── workflows/
+│   └── linkedin_optimizer_workflow.py  # LangGraph orchestration
+├── utils/
+│   ├── pdf_parser.py           # PDF text extraction
+│   ├── prompt_loader.py        # YAML prompt management
+│   └── dynamodb_storage.py     # AWS DynamoDB integration
+├── config.py                   # Environment configuration
+├── prompts.yaml                # Agent system/user prompts
+├── requirements.txt            # Python dependencies
+└── main.py                     # FastAPI application
 
-## 🧪 Testing
-
-### Backend Testing
-
-```bash
-cd backend
-python -m pytest tests/ -v
-```
-
-### Frontend Testing
-
-```bash
-cd frontend
-npm test
-```
-
-### Integration Testing
-
-1. Start both backend and frontend servers
-2. Upload a sample LinkedIn profile PDF
-3. Verify complete workflow execution
-4. Check all agent outputs and UI components
-
-## ⚙️ Configuration
-
-The application uses environment variables for configuration. All settings can be customized by editing the `.env` file in the backend directory.
-
-### Configuration Options
-
-| Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `OPENAI_API_KEY` | Your OpenAI API key | - | ✅ Yes |
-| `OPENAI_MODEL` | OpenAI model to use | `gpt-4o` | No |
-| `HOST` | Server host address | `0.0.0.0` | No |
-| `PORT` | Server port | `8000` | No |
-| `DEBUG` | Enable debug mode | `false` | No |
-| `MAX_FILE_SIZE` | Max upload size in bytes | `10485760` (10MB) | No |
-| `DEFAULT_TEMPERATURE` | LLM temperature | `0.3` | No |
-| `MAX_TOKENS` | Max tokens per request | `4000` | No |
-| `ALLOWED_ORIGINS` | CORS allowed origins | `http://localhost:3000` | No |
-
-### Model-Specific Temperatures
-
-The system automatically adjusts temperature for different agents:
-- **Profile Collector**: Uses `DEFAULT_TEMPERATURE` (precise extraction)
-- **Profile Analyzer**: Uses `DEFAULT_TEMPERATURE + 0.1` (balanced analysis)
-- **Content Generator**: Uses `DEFAULT_TEMPERATURE + 0.4` (creative content)
-
-### Configuration Validation
-
-The application validates configuration on startup and will show helpful error messages if required settings are missing or invalid.
-
-## 🔧 Development
-
-### Adding New Agent Capabilities
-
-1. Extend agent classes in the respective files
-2. Update prompts in `prompts.yaml`
-3. Modify workflow if needed in `linkedin_optimizer_workflow.py`
-4. Update frontend types and components as necessary
-
-### Customizing Prompts
-
-Edit `backend/prompts.yaml` to customize:
-- Agent personalities and expertise
-- Output formats and requirements
-- Industry-specific knowledge
-- Analysis criteria and scoring
-
-## 🚀 Deployment
-
-### Backend Deployment
-
-```bash
-# Using Docker
-docker build -t linkedin-optimizer-backend .
-docker run -p 8000:8000 linkedin-optimizer-backend
-
-# Using Gunicorn
-gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker
+frontend/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx           # Home page with upload
+│   │   ├── layout.tsx         # Root layout
+│   │   └── results/[id]/page.tsx  # Results display page
+│   ├── components/
+│   │   ├── FileUpload.tsx     # File upload component
+│   │   └── ResultsDisplay.tsx # Results visualization
+│   ├── types/
+│   │   └── index.ts           # TypeScript interfaces
+│   └── lib/                   # API utilities
+├── public/assets/             # Images and logos
+└── package.json              # Node dependencies
 ```
 
-### Frontend Deployment
+## License
 
-```bash
-npm run build
-npm start
-```
+MIT License - See LICENSE file for details
 
-## 📈 Performance
-
-- **Processing Time**: 30-60 seconds per profile optimization
-- **File Size Limit**: 10MB for PDF uploads
-- **Concurrent Requests**: Supports multiple simultaneous optimizations
-- **Rate Limiting**: Configurable based on OpenAI API limits
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Commit changes: `git commit -m 'Add feature'`
-4. Push to branch: `git push origin feature-name`
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License. 
-See `LICENSE` file for details. 
-
-## 🆘 Support
+## Support
 
 For issues and questions:
-1. Check the existing GitHub issues
+1. Check existing GitHub issues
 2. Create a new issue with detailed description
-3. Include error logs and steps to reproduce
-
+3. Include error logs with request IDs and steps to reproduce
