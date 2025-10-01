@@ -1,12 +1,9 @@
-import os
-import tempfile
 import logging
 import time
 import uuid
 from typing import Optional
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from workflows.linkedin_optimizer_workflow import LinkedInOptimizerWorkflow
@@ -71,7 +68,6 @@ async def root():
             "POST /optimize-profile - Upload PDF and get optimization results",
             "GET /results/{optimization_id} - Retrieve saved optimization results by ID",
             "GET /progress/{optimization_id} - Get real-time optimization progress",
-            "GET /results - List recent optimization results",
             "GET /health - Health check endpoint"
         ]
     }
@@ -340,46 +336,6 @@ async def get_optimization_progress(optimization_id: str):
         raise HTTPException(
             status_code=500,
             detail="Internal server error while retrieving progress"
-        )
-
-
-@app.get("/results")
-async def list_recent_optimizations(limit: int = 10):
-    """
-    List recent optimization results.
-
-    Args:
-        limit: Maximum number of results to return (default: 10, max: 50)
-
-    Returns:
-        List of recent optimization summaries
-    """
-    start_time = time.time()
-    logger.info(f"[LIST] Listing recent optimization results (limit: {limit})...")
-
-    try:
-        # Validate limit
-        if limit < 1 or limit > 50:
-            limit = 10
-
-        # Get recent results
-        results = await storage.list_recent_optimizations(limit)
-
-        retrieval_time = time.time() - start_time
-        logger.info(f"[OK] Listed {len(results)} recent results in {retrieval_time:.2f}s")
-
-        return {
-            "results": results,
-            "count": len(results),
-            "limit": limit
-        }
-
-    except Exception as e:
-        retrieval_time = time.time() - start_time
-        logger.error(f"[CRITICAL] Error listing recent results after {retrieval_time:.2f}s: {str(e)}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error listing optimization results: {str(e)}"
         )
 
 

@@ -661,7 +661,7 @@ class LinkedInOptimizerWorkflow:
             if progress_saved:
                 logger.info(f"[OK] [REQ:{req_id}] Initial progress saved to DynamoDB")
             else:
-                logger.warning(f"[WARN] [REQ:{req_id}] Failed to save initial progress to DynamoDB")
+                logger.error(f"[ERROR] [REQ:{req_id}] Failed to save initial progress to DynamoDB")
 
             logger.info(f"[INFO] [REQ:{req_id}] Starting LangGraph workflow execution...")
 

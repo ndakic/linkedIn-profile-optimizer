@@ -172,7 +172,7 @@ class DynamoDBStorage:
             bool: True if saved successfully
         """
         if not self.enabled:
-            logger.warning(f"[WARN] Cannot save step progress - DynamoDB storage is disabled")
+            logger.error(f"[ERROR] DynamoDB is disabled. AWS credentials not configured.")
             return False
 
         start_time = time.time()
@@ -248,7 +248,6 @@ class DynamoDBStorage:
             Optional[Dict[str, Any]]: Progress data or None if not found
         """
         if not self.enabled:
-            logger.warning(f"[WARN] Cannot get progress - DynamoDB storage is disabled")
             return None
 
         start_time = time.time()
@@ -300,7 +299,6 @@ class DynamoDBStorage:
             bool: True if saved successfully
         """
         if not self.enabled:
-            logger.warning(f"[WARN] Cannot save results - DynamoDB storage is disabled")
             return False
 
         start_time = time.time()
@@ -363,7 +361,6 @@ class DynamoDBStorage:
             Optional[Dict[str, Any]]: Optimization results if found, None otherwise
         """
         if not self.enabled:
-            logger.warning(f"[WARN] Cannot retrieve results - DynamoDB storage is disabled")
             return None
 
         start_time = time.time()
@@ -423,7 +420,6 @@ class DynamoDBStorage:
             List[Dict[str, Any]]: List of recent optimization summaries
         """
         if not self.enabled:
-            logger.warning("[WARN] Cannot list results - DynamoDB storage is disabled")
             return []
 
         try:
@@ -459,7 +455,6 @@ class DynamoDBStorage:
             bool: True if deleted successfully
         """
         if not self.enabled:
-            logger.warning(f"[WARN] Cannot delete results - DynamoDB storage is disabled")
             return False
 
         try:

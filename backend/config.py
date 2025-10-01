@@ -10,9 +10,14 @@ from dotenv import load_dotenv
 from typing import Optional
 
 # Load environment variables from .env file
-env_file = Path(__file__).parent / ".env"
-if env_file.exists():
-    load_dotenv(env_file)
+# Check backend/.env first (local dev), then project root (Docker/production)
+backend_env = Path(__file__).parent / ".env"
+root_env = Path(__file__).parent.parent / ".env"
+
+if backend_env.exists():
+    load_dotenv(backend_env)
+elif root_env.exists():
+    load_dotenv(root_env)
 
 
 class Config:
@@ -53,9 +58,10 @@ class Config:
         Returns:
             bool: True if configuration is valid, False otherwise
         """
+        # OPENAI_API_KEY is optional - users can provide their own through the API
         if not cls.OPENAI_API_KEY:
-            print("❌ OPENAI_API_KEY is required but not set in environment variables")
-            return False
+            print("⚠️ OPENAI_API_KEY not set - users must provide their own API key")
+            return True  # Still valid, just a warning
 
         if not cls.OPENAI_API_KEY.startswith("sk-"):
             print("❌ OPENAI_API_KEY appears to be invalid (should start with 'sk-')")

@@ -1,6 +1,15 @@
 # LinkedIn Profile Optimizer
 
-AI-powered multi-agent system that analyzes LinkedIn profiles and generates personalized optimization recommendations and content ideas using LangGraph orchestration.
+**Transform your LinkedIn presence in under 2 minutes.**
+
+An intelligent multi-agent system powered by GPT-4 that extracts, analyzes, and optimizes your LinkedIn profile while generating personalized content strategies. Built with **LangGraph orchestration**, **3 specialized AI agents**, and **real-time progress tracking** — delivering professional recommendations faster than a hiring manager can scroll through your profile.
+
+**🚀 What makes it special:**
+- Upload PDF → Get comprehensive analysis → Receive actionable recommendations
+- Content ideas tailored to YOUR expertise (not generic templates)
+- Profile scoring (0-100) with specific improvement areas
+- Token-transparent: see exactly what you're using
+- Self-service ready: use your own OpenAI API key
 
 ## Quick Start
 
@@ -10,8 +19,7 @@ cd backend
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env
-# Edit .env and add your OpenAI API key
+# Copy and edit root .env file with your API keys
 python main.py
 ```
 
@@ -97,34 +105,26 @@ The application uses a LangGraph workflow with three specialized AI agents coord
 - Users don't need to provide their own key
 - Best for internal/private deployments
 
-### Required Environment Variables
+### Environment Variables
+
+Copy `.env.example` to `.env` and configure:
+
 ```bash
-# Backend (.env)
+# Required
 OPENAI_API_KEY=your_openai_api_key_here  # Optional if users provide their own
+OPENAI_MODEL=gpt-4o-mini
 
 # Optional - AWS DynamoDB (for results storage)
 AWS_ACCESS_KEY_ID=your_aws_access_key
 AWS_SECRET_ACCESS_KEY=your_aws_secret_key
 AWS_REGION=us-east-1
-DYNAMODB_TABLE_NAME=linkedin-optimizer-results
+DYNAMODB_TABLE_NAME=linkedin-optimization-results
+
+# Frontend
+NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
 ```
 
-### Optional Configuration
-```bash
-# Model and Performance
-OPENAI_MODEL=gpt-4o-mini  # Model to use (gpt-4o, gpt-4o-mini, gpt-5-mini-2025-08-07, etc.)
-MAX_TOKENS=4000  # Max tokens per request
-MAX_COMPLETION_TOKENS=4000  # Max completion tokens
-MAX_FILE_SIZE=10485760  # 10MB file size limit
-
-# Server
-HOST=0.0.0.0
-PORT=8000
-DEBUG=false
-ALLOWED_ORIGINS=http://localhost:3000
-
-# Note: Temperature is fixed at 1.0 (only supported value for certain OpenAI models)
-```
+**Note:** Temperature is fixed at 1.0 (only supported value for certain OpenAI models)
 
 ## API Endpoints
 
@@ -143,7 +143,6 @@ ALLOWED_ORIGINS=http://localhost:3000
 
 - **`GET /results/{optimization_id}`** - Retrieve saved optimization results from DynamoDB
 - **`GET /progress/{optimization_id}`** - Get real-time optimization progress with step details
-- **`GET /results`** - List recent optimization results
 
 ### Utility Endpoints
 
