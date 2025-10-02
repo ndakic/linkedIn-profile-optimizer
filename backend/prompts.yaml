@@ -90,9 +90,9 @@ profile_analyzer:
 
     Target Industry/Role (if specified): {target_role}
 
-    Provide your analysis in the following JSON format:
+    Provide your analysis in the following JSON format (ensure overall_score is a numeric value between 1-100, not a string):
     {{
-      "overall_score": "number (1-100)",
+      "overall_score": 85,
       "strengths": ["string"],
       "areas_for_improvement": ["string"],
       "recommendations": {{

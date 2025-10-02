@@ -362,12 +362,12 @@ export default function ResultsPage() {
       const isPending = !isCompleted && !isCurrent;
 
       let statusIcon = '⏳';
-      let statusClass = 'text-gray-500';
-      let indicatorClass = 'bg-gray-300';
+      let statusClass = 'text-gray-500 dark:text-gray-400';
+      let indicatorClass = 'bg-gray-300 dark:bg-gray-600';
 
       if (isCompleted) {
         statusIcon = '✅';
-        statusClass = 'text-green-700';
+        statusClass = 'text-green-700 dark:text-green-400';
         indicatorClass = 'bg-green-500';
       } else if (isCurrent) {
         statusIcon = '🔄';
@@ -383,7 +383,7 @@ export default function ResultsPage() {
               {statusIcon} {step.label}
             </div>
             {(isCurrent || isCompleted) && (
-              <div className="text-xs text-gray-500 mt-1">
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 {step.description}
               </div>
             )}
@@ -451,11 +451,11 @@ export default function ResultsPage() {
 
                   {progressData && (
                     <div className="mb-4">
-                      <div className="flex justify-between text-sm text-gray-600 mb-1">
+                      <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
                         <span>Progress</span>
                         <span>{progressData.progress_percentage}%</span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                         <div
                           className="bg-linkedin h-2 rounded-full transition-all duration-300"
                           style={{ width: `${progressData.progress_percentage}%` }}
@@ -470,12 +470,12 @@ export default function ResultsPage() {
 
                   <div className="mt-4 text-center">
                     {progressData?.estimated_remaining_seconds > 0 && (
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
                         Estimated remaining: {Math.ceil(progressData.estimated_remaining_seconds / 60)} minutes
                       </p>
                     )}
                     {pollingCount > 0 && (
-                      <p className="text-xs text-gray-400 mt-1">
+                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
                         Checking for updates ({pollingCount}/120)
                       </p>
                     )}
@@ -623,9 +623,22 @@ export default function ResultsPage() {
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
               </svg>
-              <span className="font-medium">Otterlab</span>
+              <span className="font-medium">Otterlab.dev</span>
             </a>
-            <ThemeToggle />
+            <div className="flex items-center space-x-3">
+              <ThemeToggle />
+              <a
+                href="https://github.com/ndakic/linkedIn-profile-optimizer"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+                </svg>
+                <span className="font-medium">View on GitHub</span>
+              </a>
+            </div>
           </div>
         </div>
       </header>

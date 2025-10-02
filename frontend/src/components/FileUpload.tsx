@@ -164,7 +164,7 @@ export default function FileUpload({
 
           {selectedFile ? (
             <div className="space-y-2">
-              <p className="text-green-600 font-medium">
+              <p className="text-green-600 dark:text-green-400 font-medium">
                 ✅ {selectedFile.name}
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -173,7 +173,7 @@ export default function FileUpload({
             </div>
           ) : (
             <div className="space-y-2">
-              <p className="text-lg font-medium text-gray-700">
+              <p className="text-lg font-medium text-gray-700 dark:text-white">
                 Upload your LinkedIn profile PDF
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -183,12 +183,12 @@ export default function FileUpload({
           )}
 
           {fileError && (
-            <p className="text-red-600 text-sm font-medium">
+            <p className="text-red-600 dark:text-red-400 text-sm font-medium">
               ❌ {fileError}
             </p>
           )}
 
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-gray-400 dark:text-gray-500">
             Maximum file size: 10MB • PDF format only
           </p>
         </div>

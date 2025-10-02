@@ -105,7 +105,10 @@ class ProfileAnalyzerAgent:
             try:
                 # Extract JSON from markdown if wrapped in code blocks
                 clean_json = extract_json_from_markdown(response.content)
+                logger.info(f"[DEBUG] [REQ:{req_id}] Raw LLM response (first 500 chars): {response.content[:500]}")
+                logger.info(f"[DEBUG] [REQ:{req_id}] Cleaned JSON (first 500 chars): {clean_json[:500]}")
                 analysis_results = json.loads(clean_json)
+                logger.info(f"[DEBUG] [REQ:{req_id}] Parsed overall_score type: {type(analysis_results.get('overall_score'))} value: {analysis_results.get('overall_score')}")
                 validated_results = self._validate_analysis_results(analysis_results)
 
                 total_time = time.time() - start_time
@@ -153,10 +156,23 @@ class ProfileAnalyzerAgent:
                     analysis_results[key] = ""
 
         # Validate overall_score range
-        if not isinstance(analysis_results["overall_score"], (int, float)):
+        score = analysis_results.get("overall_score")
+
+        # Try to convert string to number if needed
+        if isinstance(score, str):
+            try:
+                score = float(score)
+            except (ValueError, TypeError):
+                logger.warning(f"Could not convert overall_score string '{score}' to number, defaulting to 0")
+                score = 0
+
+        # Ensure it's a number
+        if not isinstance(score, (int, float)):
+            logger.warning(f"overall_score is not a number (type: {type(score)}), defaulting to 0")
             analysis_results["overall_score"] = 0
         else:
-            analysis_results["overall_score"] = max(0, min(100, analysis_results["overall_score"]))
+            # Clamp to valid range
+            analysis_results["overall_score"] = int(max(0, min(100, score)))
 
         # Ensure recommendations structure
         recommendations = analysis_results.get("recommendations", {})
