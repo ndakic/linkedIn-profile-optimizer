@@ -113,7 +113,7 @@ The application uses a LangGraph workflow with three specialized AI agents coord
 
 ### Environment Variables
 
-Copy `.env.example` to `.env` and configure:
+Create `.env` file in backend directory and configure:
 
 ```bash
 # Required
@@ -129,6 +129,8 @@ DYNAMODB_TABLE_NAME=linkedin-optimization-results
 # Frontend
 NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
 ```
+
+See `.env.example` for template.
 
 **Note:** Temperature is fixed at 1.0 (only supported value for certain OpenAI models)
 
