@@ -1,15 +1,15 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Image from 'next/image';
-import { useParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import ResultsDisplay from '@/components/ResultsDisplay';
 import ThemeToggle from '@/components/ThemeToggle';
 import { OptimizationResults } from '@/types';
 import { isApiKeyError } from '@/lib/utils';
 
-export default function ResultsPage() {
-  const params = useParams();
+function ResultsContent() {
+  const searchParams = useSearchParams();
   const router = useRouter();
   const [results, setResults] = useState<OptimizationResults | null>(null);
   const [loading, setLoading] = useState(true);
@@ -18,7 +18,7 @@ export default function ResultsPage() {
   const [pollingCount, setPollingCount] = useState(0);
   const [progressData, setProgressData] = useState<any>(null);
 
-  const optimizationId = params.id as string;
+  const optimizationId = searchParams.get('id') || '';
 
   useEffect(() => {
     if (optimizationId) {
@@ -708,5 +708,17 @@ export default function ResultsPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function ResultsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-linkedin border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    }>
+      <ResultsContent />
+    </Suspense>
   );
 }

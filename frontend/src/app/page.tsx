@@ -37,7 +37,7 @@ export default function HomePage() {
     const optimizationId = generateOptimizationId();
 
     // Redirect immediately to results page (don't wait for response)
-    router.push(`/results/${optimizationId}`);
+    router.push(`/results?id=${optimizationId}`);
 
     // Start background processing (fire and forget)
     try {
