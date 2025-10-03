@@ -3,14 +3,10 @@ frontend:
   phases:
     preBuild:
       commands:
-        - pwd
-        - ls -la
         - cd frontend && nvm install 20 && nvm use 20 && npm ci
     build:
       commands:
-        - pwd
-        - ls -la
-        - cd $CODEBUILD_SRC_DIR/frontend && npm run build
+        - npm run build
   artifacts:
     baseDirectory: frontend/.next
     files:
