@@ -7,6 +7,8 @@ import ResultsDisplay from '@/components/ResultsDisplay';
 import ThemeToggle from '@/components/ThemeToggle';
 import { OptimizationResults } from '@/types';
 import { isApiKeyError } from '@/lib/utils';
+import logoBlack from '@/assets/otterlab-logo-wide-black.png';
+import logoWhite from '@/assets/otterlab-logo-wide-white.png';
 
 function ResultsContent() {
   const searchParams = useSearchParams();
@@ -404,12 +406,20 @@ function ResultsContent() {
                 href="https://otterlab.dev/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center space-x-2 px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="flex items-center px-4 py-2 hover:opacity-80 transition-opacity"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                </svg>
-                <span className="font-medium">Otterlab.dev</span>
+                <Image
+                  src={logoBlack}
+                  alt="Otterlab"
+                  className="h-10 w-auto dark:hidden"
+                  priority
+                />
+                <Image
+                  src={logoWhite}
+                  alt="Otterlab"
+                  className="h-10 w-auto hidden dark:block"
+                  priority
+                />
               </a>
               <div className="flex items-center space-x-3">
                 <ThemeToggle />
@@ -501,12 +511,20 @@ function ResultsContent() {
                 href="https://otterlab.dev/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center space-x-2 px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="flex items-center px-4 py-2 hover:opacity-80 transition-opacity"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                </svg>
-                <span className="font-medium">Otterlab.dev</span>
+                <Image
+                  src={logoBlack}
+                  alt="Otterlab"
+                  className="h-10 w-auto dark:hidden"
+                  priority
+                />
+                <Image
+                  src={logoWhite}
+                  alt="Otterlab"
+                  className="h-10 w-auto hidden dark:block"
+                  priority
+                />
               </a>
               <div className="flex items-center space-x-3">
                 <ThemeToggle />
@@ -563,12 +581,20 @@ function ResultsContent() {
                 href="https://otterlab.dev/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center space-x-2 px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="flex items-center px-4 py-2 hover:opacity-80 transition-opacity"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                </svg>
-                <span className="font-medium">Otterlab</span>
+                <Image
+                  src={logoBlack}
+                  alt="Otterlab"
+                  className="h-10 w-auto dark:hidden"
+                  priority
+                />
+                <Image
+                  src={logoWhite}
+                  alt="Otterlab"
+                  className="h-10 w-auto hidden dark:block"
+                  priority
+                />
               </a>
               <div className="flex items-center space-x-3">
                 <ThemeToggle />
@@ -618,12 +644,20 @@ function ResultsContent() {
               href="https://otterlab.dev/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center space-x-2 px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="flex items-center px-4 py-2 hover:opacity-80 transition-opacity"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-              </svg>
-              <span className="font-medium">Otterlab.dev</span>
+              <Image
+                src={logoBlack}
+                alt="Otterlab"
+                className="h-10 w-auto dark:hidden"
+                priority
+              />
+              <Image
+                src={logoWhite}
+                alt="Otterlab"
+                className="h-10 w-auto hidden dark:block"
+                priority
+              />
             </a>
             <div className="flex items-center space-x-3">
               <ThemeToggle />
@@ -646,51 +680,70 @@ function ResultsContent() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
-          {/* Header with actions */}
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                LinkedIn Profile Optimization Results
-              </h1>
-              <p className="text-gray-600 dark:text-gray-300 mt-2">
-                Results ID: <span className="font-mono text-sm bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">{optimizationId}</span>
-              </p>
-              {results.storage_info?.created_at && (
-                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
-                  Generated: {new Date(results.storage_info.created_at).toLocaleString()}
-                </p>
-              )}
-              {results.token_usage && (
-                <div className="text-gray-500 dark:text-gray-400 text-sm mt-2 flex items-center gap-4">
-                  <span className="flex items-center">
-                    🤖 <span className="ml-1 font-medium">Model:</span>
-                    <span className="ml-1 font-mono bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">{results.token_usage.model}</span>
-                  </span>
-                  <span className="flex items-center">
-                    📊 <span className="ml-1 font-medium">Tokens:</span>
-                    <span className="ml-1 font-mono bg-green-50 dark:bg-green-900 px-2 py-0.5 rounded text-green-700 dark:text-green-300">
-                      {results.token_usage.total_tokens.toLocaleString()}
+          {/* Header Section */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+              {/* Title and Meta */}
+              <div className="flex-1">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                  LinkedIn Profile Optimization Results
+                </h1>
+
+                {/* Meta Information Grid */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="text-gray-500 dark:text-gray-400">Results ID:</span>
+                    <span className="font-mono text-xs sm:text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1 rounded">
+                      {optimizationId}
                     </span>
-                    <span className="ml-1 text-xs text-gray-400">
-                      (Input: {results.token_usage.prompt_tokens.toLocaleString()} | Output: {results.token_usage.completion_tokens.toLocaleString()})
-                    </span>
-                  </span>
+                  </div>
+
+                  {results.storage_info?.created_at && (
+                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                      <span>Generated:</span>
+                      <span>{new Date(results.storage_info.created_at).toLocaleString()}</span>
+                    </div>
+                  )}
+
+                  {results.token_usage && (
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 text-sm">
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-500 dark:text-gray-400">🤖 Model:</span>
+                        <span className="font-mono text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded">
+                          {results.token_usage.model}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-500 dark:text-gray-400">📊 Tokens:</span>
+                        <span className="font-mono text-xs bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded">
+                          {results.token_usage.total_tokens.toLocaleString()}
+                        </span>
+                        <span className="text-xs text-gray-400 dark:text-gray-500">
+                          ({results.token_usage.prompt_tokens.toLocaleString()} in / {results.token_usage.completion_tokens.toLocaleString()} out)
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-            <div className="flex space-x-3">
-              <button
-                onClick={handleCopyUrl}
-                className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-              >
-                📋 Copy URL
-              </button>
-              <button
-                onClick={handleNewOptimization}
-                className="px-4 py-2 bg-linkedin text-white rounded-lg hover:bg-linkedin-dark transition-colors"
-              >
-                New Optimization
-              </button>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 lg:flex-shrink-0">
+                <button
+                  onClick={handleCopyUrl}
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium text-sm whitespace-nowrap"
+                >
+                  <span>📋</span>
+                  <span>Copy URL</span>
+                </button>
+                <button
+                  onClick={handleNewOptimization}
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 bg-linkedin text-white rounded-lg hover:bg-linkedin-dark transition-colors font-medium text-sm whitespace-nowrap"
+                >
+                  <span>+</span>
+                  <span>New Optimization</span>
+                </button>
+              </div>
             </div>
           </div>
 
