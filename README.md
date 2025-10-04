@@ -4,7 +4,7 @@
 An intelligent multi-agent system powered by GPT-4 that extracts, analyzes, and optimizes your LinkedIn profile while generating personalized content strategies.  
 Built with **LangGraph orchestration**, **3 specialized AI agents**, and **real-time progress tracking**, delivering professional recommendations faster than a hiring manager can scroll through your profile.  
 
-![LinkedIn Profile Optimizer Demo](files/linkedIn-optimizer.png)
+![LinkedIn Profile Optimizer](files/linkedin-optimizer.png)
 
 **🚀 What makes it special:**
 - Upload PDF → Get comprehensive analysis → Receive actionable recommendations
